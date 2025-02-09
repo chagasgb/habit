@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle de Hábitos</title>
+  
+  <!-- Incluindo o Bootstrap 4 -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Incluindo a fonte Roboto do Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  
+  <!-- Incluindo a fonte Montserrat para a logomarca -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+  
+  <!-- Incluindo o Font Awesome 4 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <style>
+    /* Fundo cinza mais claro para a página */
+    body {
+      background-color: #0e0c0cf6; /* Cinza escuro, mas mais claro que o contêiner */
+      font-family: 'Roboto', sans-serif; /* Aplicando a fonte Roboto */
+      font-weight: 300; /* Peso fino */
+      margin: 0; /* Remover margem padrão do body */
+    }
+    /* Contêiner principal com fundo cinza mais escuro */
+    .custom-container {
+      background-color: #272729e7; /* Cinza mais escuro que o fundo da página */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+      padding: 20px; /* Aumentando o padding para melhorar a aparência */
+      border: 1px solid #555; /* Borda fina cinza */
+      border-radius: 0 0 10px 10px; /* Arredonda apenas a parte inferior */
+    }
+    .habit-item {
+      background-color: #272729e7; /* Mesma cor do contêiner principal */
+      margin-bottom: 10px;
+      padding: 10px;
+      border: none; /* Remover bordas internas */
+      border-bottom: 1px solid #555; /* Linha fina cinza para separação */
+      transition: background-color 0.3s; /* Transição para o hover */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .habit-item:last-child {
+      border-bottom: none; /* Remove a linha no último item */
+    }
+    .habit-item:hover {
+      background-color: #34333a; /* Cor um pouco mais clara ao passar o mouse */
+    }
+    .habit-item .icon {
+      color: #fff;
+      font-size: 1.2rem; /* Tamanho do ícone */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+    .habit-item p {
+      margin: 0; /* Remover margem padrão do parágrafo */
+      font-size: 0.9rem; /* Diminuir o tamanho da fonte */
+      opacity: 0.8; /* Deixar o texto um pouco opaco */
+    }
+    /* Estilo para as navegações */
+    .nav-pills .nav-link {
+      background-color: #333; /* Preto mais claro */
+      color: #eee; /* Branco mais escuro */
+      border-radius: 20px; /* Borda arredondada */
+      margin-right: 5px; /* Margem direita entre as pills */
+      padding: 5px 15px; /* Diminuindo o tamanho dos botões */
+      font-size: 0.9rem; /* Reduzindo o tamanho da fonte */
+    }
+    .nav-pills .nav-link:last-child {
+      margin-right: 0; /* Removendo margem do último item */
+    }
+    .nav-pills .nav-link.active {
+      background-color: #eee; /* Branco mais escuro */
+      color: #333; /* Preto mais claro */
+    }
+    /* Alinhamento das navegações à esquerda */
+    .nav-pills-container {
+      margin-left: 8px; /* Margem esquerda para alinhar com o conteúdo */
+    }
+    .date-span {
+      opacity: 0.4; /* 80% opaco */
+    }
+    /* Estilos para os filtros */
+    .filters-container {
+      margin-top: 20px;
+    }
+    .filter-btn {
+      background-color: #333; /* Preto mais claro */
+      color: #eee; /* Branco mais escuro */
+      border: none;
+      border-radius: 20px;
+      padding: 3px 20px;
+      margin-right: 2px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .filter-btn:hover {
+      background-color: #555;
+    }
+    .filter-btn.active {
+      background-color: #eee;
+      color: #333;
+    }
+    .clickable-icon {
+      display: inline-block;
+      padding: 10px; /* Aumenta o espaço clicável */
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+    .clickable-icon:hover {
+      transform: scale(1.2); /* Aumenta o tamanho ao passar o mouse */
+      background-color: rgba(255, 255, 255, 0.1); /* Adiciona um fundo suave */
+      border-radius: 50%; /* Torna o fundo redondo */
+    }
+    .clickable-text {
+      transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+      cursor: pointer; /* Indica que o elemento é clicável */
+    }
+    .clickable-text:hover {
+      color: #ffffff; /* Muda a cor do texto */
+      background-color: rgba(255, 255, 255, 0.1); /* Adiciona um fundo suave */
+      padding: 5px 10px; /* Adiciona um pouco de padding ao redor do texto */
+      border-radius: 5px; /* Torna o fundo redondo */
+      transform: scale(1.05); /* Pequeno aumento de escala ao passar o mouse */
+    }
+    /* Estilos para a barra da logomarca */
+    .logo-bar {
+      background-color: #333; /* Cor de fundo cinza escuro */
+      height: 50px; /* Altura maior para melhor visualização */
+      width: 50%; /* Mesma largura que o container principal */
+      margin: 0 auto; /* Centraliza a faixa */
+      border-radius: 10px 10px 0 0; /* Arredonda apenas os cantos superiores */
+      border: 1px solid #555; /* Borda cinza fina */
+      border-bottom: none; /* Remove a borda inferior */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px; /* Adiciona padding para espaçamento interno */
+    }
+    .logo-bar h2 {
+      color: #ffffff; /* Cor do texto branca */
+      font-family: 'Montserrat', sans-serif; /* Fonte Montserrat */
+      font-weight: 300; /* Peso fino */
+      font-size: 18px; /* Tamanho da fonte */
+      margin: 0; /* Remove margem padrão do h2 */
+      display: flex;
+      align-items: center;
+    }
+    .logo-bar i {
+      margin: 0 10px; /* Espaço entre os ícones e o texto */
+    }
+    .logo-bar .nav-icon {
+      margin-left: 10px; /* Espaço entre o texto e o ícone de navegação */
+    }
+    /* Estilos para o input */
+    .form-control {
+      background-color: #333; /* Cor de fundo mais escura */
+      color: #fff; /* Cor do texto branca */
+      border: none; /* Remove a borda */
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .form-control:focus {
+      background-color: #444; /* Cor de fundo mais clara quando focado */
+      color: #fff; /* Cor do texto branca ao focar */
+      outline: none; /* Remove o outline padrão */
+      box-shadow: none; /* Remove qualquer sombra de foco */
+    }
+    /* Estilos para a barra de progresso circular */
+    .progress-circle {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      margin-left: 10px; /* Posiciona à direita do nome do hábito */
+    }
+    .progress-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    .progress-ring__circle {
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.3s;
+      stroke-width: 2px;
+      fill: none;
+    }
+    .progress-ring.circle .progress-ring__circle {
+      stroke: #007bff; /* Cor da borda base (azul) */
+    }
+    .progress-ring.fill .progress-ring__circle {
+      stroke: #fff; /* Cor da borda de progresso (branco) */
+    }
+  </style>
+</head>
+<body>
+  <!-- Espaço acima da barra da logomarca -->
+  <div class="mt-5"></div>
+  
+  <!-- Barra da logomarca acima do container principal -->
+  <div class="logo-bar">
+    <div class="d-flex align-items-center">
+      <i class="fa fa-calendar-check-o text-white mr-2"></i> <!-- Ícone de calendário em branco -->
+      <h2 class="mb-0">Controle de Hábitos</h2> <!-- Texto em português -->
+    </div>
+    <i class="fa fa-bars text-white nav-icon" onclick="toggleMenu()"></i> <!-- Ícone de navegação em branco -->
+  </div>
+  
+  <!-- Container principal -->
+  <div class="container w-50 p-3 my-0 text-white custom-container">
+    <div class="container p-1 my-2 text-center"> 
+      <h1 class="display-4">
+        🌞 Bom dia, Gabriel <!-- Emoji de sol colorido -->
+      </h1> 
+    </div>
+    <div class="form-group">
+      <label for=""></label>
+      <input type="text" name="" id="" class="form-control" placeholder="Crie um novo hábito" aria-describedby="helpId">
+    </div>
+    <div class="text-center my-3 d-flex align-items-center">
+      <hr class="flex-grow-1 mx-2" style="border: none; border-top: 1px solid #fff; opacity: 0.3;">
+      <a href="#" class="text-white mx-2 clickable-icon" style="text-decoration: none;" onclick="handleLeftArrowClick()">
+        <i class="fa fa-angle-left"></i>
+      </a>
+      <a href="#" class="text-white mx-1 text-date-span clickable-text" style="text-decoration: none;" onclick="handleDateClick()">
+        Terça-feira - 24/04/2025
+      </a>
+      <a href="#" class="text-white mx-2 clickable-icon" style="text-decoration: none;" onclick="handleRightArrowClick()">
+        <i class="fa fa-angle-right"></i>
+      </a>
+      <hr class="flex-grow-1 mx-2" style="border: none; border-top: 1px solid #fff; opacity: 0.3;">
+    </div>
+  
+    <!-- Filtros -->
+    <div class="filters-container">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <button class="filter-btn" data-filter="morning">Concluído</button>
+    </div>
+    <!-- Lista de hábitos -->
+    <div class="mt-4">
+      <div class="habit-item morning" onclick="increaseProgress(this)">
+        <div class="d-flex align-items-center">
+          <p>Ler por 30 minutos</p>
+          <div class="progress-circle">
+            <svg class="progress-ring circle" width="40" height="40">
+              <circle class="progress-ring__circle" stroke="#007bff" stroke-width="2" fill="transparent" r="18" cx="20" cy="20"></circle>
+            </svg>
+            <svg class="progress-ring fill" width="40" height="40" data-progress="20">
+              <circle class="progress-ring__circle" stroke="#fff" stroke-width="2" fill="transparent" r="18" cx="20" cy="20"></circle>
+            </svg>
+            <i class="fa fa-book icon"></i>
+          </div>
+        </div>
+      </div>
+      <div class="habit-item afternoon" onclick="increaseProgress(this)">
+        <div class="d-flex align-items-center">
+          <p>Fazer exercícios físicos</p>
+          <div class="progress-circle">
+            <svg class="progress-ring circle" width="40" height="40">
+              <circle class="progress-ring__circle" stroke="#007bff" stroke-width="2" fill="transparent" r="18" cx="20" cy="20"></circle>
+            </svg>
+            <svg class="progress-ring fill" width="40" height="40" data-progress="20">
+              <circle class="progress-ring__circle" stroke="#fff" stroke-width="2" fill="transparent" r="18" cx="20" cy="20"></circle>
+            </svg>
+            <i class="fa fa-bicycle icon"></i>
+          </div>
+        </div>
+      </div>
+      <div class="habit-item evening" onclick="increaseProgress(this)">
+        <div class="d-flex align-items-center">
+          <p>Beber água durante o dia</p>
+          <div class="progress-circle">
+            <svg class="progress-ring circle" width="40" height="40">
+              <circle class="progress-ring__circle" stroke="#007bff" stroke-width="2" fill="transparent" r="18" cx="20" cy="20"></circle>
+            </svg>
+            <svg class="progress-ring fill" width="40" height="40" data-progress="20">
+              <circle class="progress-ring__circle" stroke="#fff" stroke-width="2" fill="transparent" r="18" cx="20" cy="20"></circle>
+            </svg>
+            <i class="fa fa-tint icon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Incluindo o Bootstrap 4 JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    function handleLeftArrowClick() {
+      // Adicione aqui a lógica desejada para a seta à esquerda
+      alert('Seta à esquerda clicada!');
+    }
+    function handleRightArrowClick() {
+      // Adicione aqui a lógica desejada para a seta à direita
+      alert('Seta à direita clicada!');
+    }
+    function handleDateClick() {
+      // Adicione aqui a lógica desejada ao clicar no texto
+      alert('Texto "Terça-feira - 24/04/2025" clicado!');
+    }
+    function handleDateHover() {
+      // Adicione aqui a lógica desejada ao passar o mouse no texto
+      console.log('Texto "Terça-feira - 24/04/2025" foi hover');
+    }
+    function handleDateOut() {
+      // Adicione aqui a lógica desejada ao tirar o mouse do texto
+      console.log('Texto "Terça-feira - 24/04/2025" deixou de ser hover');
+    }
+    function toggleMenu() {
+      // Adicione aqui a lógica desejada para abrir/fechar o menu
+      alert('Menu clicado!');
+    }
+
+    function increaseProgress(element) {
+      const fillElement = element.querySelector('.fill');
+      let currentProgress = parseInt(fillElement.getAttribute('data-progress'), 10);
+      currentProgress += 20;
+      if (currentProgress > 100) {
+        currentProgress = 100;
+      }
+      fillElement.setAttribute('data-progress', currentProgress);
+      const circumference = 2 * Math.PI * 18; // Circunferência do círculo (r = 18)
+      const offset = circumference - (currentProgress / 100) * circumference;
+      fillElement.querySelector('.progress-ring__circle').style.strokeDasharray = `${offset} ${circumference}`;
+    }
+
+    // Inicializar o progresso em 20%
+    document.querySelectorAll('.habit-item').forEach(item => {
+      const fillElement = item.querySelector('.fill');
+      let currentProgress = parseInt(fillElement.getAttribute('data-progress'), 10);
+      const circumference = 2 * Math.PI * 18; // Circunferência do círculo (r = 18)
+      const offset = circumference - (currentProgress / 100) * circumference;
+      fillElement.querySelector('.progress-ring__circle').style.strokeDasharray = `${offset} ${circumference}`;
+    });
+  </script>
+</body>
+</html>
