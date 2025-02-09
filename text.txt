@@ -1,0 +1,32 @@
+https://chatgpt.com/c/67a69863-1d0c-8004-835e-d94b56429aea
+ Estrutura detalhada das tabelas
+🔹 habits (Tabela principal dos hábitos)
+Armazena os hábitos que o usuário deseja rastrear.
+
+id	name	description	created_at
+1	Beber Água	2L por dia	2025-02-07 08:00:00
+2	Ler um Livro	10 páginas	2025-02-07 08:30:00
+🔹 habit_record (Registra quando um hábito foi concluído)
+Cada linha representa um dia e um hábito concluído.
+
+id	habit_id	date	completed
+1	1	2025-02-07	✅ (True)
+2	2	2025-02-07	❌ (False)
+🔹 habit_schedule (Determina em quais dias um hábito deve ser feito)
+Permite definir a frequência do hábito.
+
+id	habit_id	day_of_week
+1	1	Monday
+2	1	Wednesday
+3	1	Fridayc
+🔹 calendar_day (Mantém o controle diário de quais hábitos foram ou não concluídos)
+Essa tabela pode ser gerada dinamicamente para verificar o status de cada hábito por dia.
+
+id	date	habit_id	completed
+1	2025-02-07	1	✅ (True)
+2	2025-02-07	2	❌ (False)
+Se quiser incluir suporte para múltiplos usuários, basta adicionar a tabela:
+
+🔹 users (Para suporte a múltiplos usuários)
+id	username	email	password_hash
+1	Gabriel	gabi@email.com	hash12345
