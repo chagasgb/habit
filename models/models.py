@@ -1,50 +1,54 @@
+from sqlalchemy import JSON, Column, Integer, String, Boolean, Date, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
+from datetime import date, datetime
+from database.database import Base, SessionLocal
 from pydantic import BaseModel, field_validator
 from datetime import datetime
 from typing import Optional
-from database import SessionLocal
-from models import Habit
 
-class HabitCreate(BaseModel):
-    name: str
-    frequency: int = 1
-    active: bool = True
-    flexible: bool = False
+class Habit(Base):
+    __tablename__ = "habits"
     
-    #verifica se esta vazio
-    @field_validator('name')
-    @classmethod
-    def name_not_empty(cls, v):
-        if not v.strip():
-            raise ValueError("Name cannot be empty or whitespace only")
-        return v
-
-    #verifica se ja existe
-    @field_validator('name')
-    @classmethod
-    def name_must_be_unique(cls, v):
-        db = SessionLocal()
-        try:
-            habit = db.query(Habit).filter(Habit.name == v).first()
-            if habit:
-                raise ValueError(f"Habit with name '{v}' already exists")
-        finally:
-            db.close()
-        return v
-
-
-class HabitResponse(BaseModel):
-    id: int
-    name: str
-    frequency: int
-    active: bool
-    flexible: bool
-    records: int
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True, unique=True)
+    dias_da_semana = Column(JSON, nullable=False)
+    active = Column(Boolean, default=True)
+    records = relationship("HabitRecord", back_populates="habit")
     
     class Config:
         from_attributes = True
 
-#-------------------------------#------------------------ 
+#modelos pydantic        
+class HabitCreate(BaseModel):
+    name: str
+    dias_da_semana: list
+    active: bool = True
 
+class HabitResponse(BaseModel):
+    id: int
+    name: str
+    dias_da_semana: list
+    active: bool
+    records: int
+    
+    class Config:
+        from_attributes = True
+        
+#----------------------------------#
+
+class HabitRecord(Base):
+    __tablename__ = "habit_records"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    habit_id = Column(Integer, ForeignKey("habits.id"))
+    date = Column(Date, default=date.today)
+    record_datetime = Column(DateTime, default=datetime.now)
+    habit = relationship("Habit", back_populates="records")
+    
+    class Config:
+        from_attributes = True
+
+#modelos pydantic
 class HabitRecordCreate(BaseModel):
     name: str
 

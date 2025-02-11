@@ -1,9 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy import func
 from sqlalchemy.orm import Session
-from database import get_db, Base, engine
-from models import Habit, HabitRecord
-from schemas import HabitCreate, HabitResponse, HabitRecordCreate, HabitRecordResponse
+from database.database import get_db, Base, engine
+from models.models import *
 from datetime import datetime, date
 from typing import List
 
