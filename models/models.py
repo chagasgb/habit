@@ -17,6 +17,14 @@ class Habit(Base):
     
     class Config:
         from_attributes = True
+        
+class MetaSemanal(Habit):
+    objetivo: int
+    
+    def atualizar_progresso(self, quantidade: int):
+        self.progresso += quantidade
+        self.concluido = self.progresso >= self.objetivo
+        return 
 
 #modelos pydantic        
 class HabitCreate(BaseModel):
